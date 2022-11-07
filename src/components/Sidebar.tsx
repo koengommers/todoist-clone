@@ -14,7 +14,7 @@ const Sidebar = () => {
         isOpen={projectModalOpen}
         close={() => setProjectModalOpen(false)}
       />
-      <div className="flex items-center text-sm font-semibold opacity-50">
+      <div className="flex items-center rounded-md p-2 text-sm font-semibold text-neutral-100/50 hover:bg-neutral-600">
         <Link className="flex-grow" href="/projects/active">
           Projects
         </Link>
