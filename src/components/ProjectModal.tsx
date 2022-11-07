@@ -3,9 +3,10 @@ import Button from "./Button";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { trpc } from "../utils/trpc";
 
-const schema = z.object({
-  name: z.string().min(1),
+export const schema = z.object({
+  name: z.string().min(1).max(100),
 });
 type FormValues = z.infer<typeof schema>;
 
@@ -19,13 +20,26 @@ const ProjectModal = ({
   const {
     register,
     formState: { isValid },
+    reset,
     handleSubmit,
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
   });
+  const utils = trpc.useContext();
+  const mutation = trpc.projects.add.useMutation({
+    onSuccess: (data) => {
+      utils.projects.list.setData(
+        (previousData) => previousData && [...previousData, data]
+      );
+      reset();
+      close();
+    },
+  });
 
   // TODO: Mutate server state
-  const onSubmit: SubmitHandler<FormValues> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<FormValues> = (data) => {
+    mutation.mutate(data);
+  };
 
   return (
     <Dialog open={isOpen} onClose={close}>
@@ -47,12 +61,12 @@ const ProjectModal = ({
               {...register("name")}
             />
           </div>
-          <div className="flex justify-end gap-2 px-5 py-3">
-            <Button variant="secondary" onClick={close}>
-              Cancel
-            </Button>
+          <div className="flex flex-row-reverse gap-2 px-5 py-3">
             <Button variant="primary" disabled={!isValid}>
               Add
+            </Button>
+            <Button variant="secondary" onClick={close}>
+              Cancel
             </Button>
           </div>
         </Dialog.Panel>
