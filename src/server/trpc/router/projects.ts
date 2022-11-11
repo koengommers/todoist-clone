@@ -37,7 +37,6 @@ export const projectsRouter = router({
         userId: ctx.session.user.id,
       },
     });
-    console.log(project);
     return project;
   }),
 });
