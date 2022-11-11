@@ -4,7 +4,8 @@ import type { SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import Button from "./Button";
 import { trpc } from "../utils/trpc";
-import { useState } from "react";
+import { Popover } from "@headlessui/react";
+import { PlusIcon } from "@heroicons/react/24/outline";
 
 export const schema = z.object({
   name: z.string().min(1).max(180),
@@ -16,7 +17,6 @@ type TaskContext = {
   projectId: string;
 };
 const TaskAdder = ({ context }: { context: TaskContext }) => {
-  const [open, setOpen] = useState(false);
   const {
     register,
     formState: { isValid },
@@ -44,33 +44,44 @@ const TaskAdder = ({ context }: { context: TaskContext }) => {
     mutation.mutate({ ...context, ...data });
   };
 
-  if (!open) {
-    return <button onClick={() => setOpen(true)}>Add task</button>;
-  }
-
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div className="flex flex-col gap-3 rounded-md border border-white/10 p-2 focus-within:border-white/20">
-        <input
-          placeholder="Task name"
-          className="bg-transparent text-sm outline-none placeholder:text-white/40"
-          {...register("name")}
-        />
-        <input
-          placeholder="Description"
-          className="bg-transparent pb-2 text-xs outline-none placeholder:text-white/30"
-          {...register("description")}
-        />
-      </div>
-      <div className="flex flex-row-reverse gap-2 py-3">
-        <Button variant="primary" disabled={!isValid}>
-          Add task
-        </Button>
-        <Button variant="secondary" onClick={() => setOpen(false)}>
-          Cancel
-        </Button>
-      </div>
-    </form>
+    <Popover>
+      {({ open, close }) => (
+        <>
+          {!open && (
+            <Popover.Button className="flex items-center text-red-500">
+              <PlusIcon className="h-6 w-6" /> Add task
+            </Popover.Button>
+          )}
+          <Popover.Panel
+            as="form"
+            focus={true}
+            onSubmit={handleSubmit(onSubmit)}
+          >
+            <div className="flex flex-col gap-3 rounded-md border border-white/10 p-2 focus-within:border-white/20">
+              <input
+                placeholder="Task name"
+                className="bg-transparent text-sm outline-none placeholder:text-white/40"
+                {...register("name")}
+              />
+              <input
+                placeholder="Description"
+                className="bg-transparent pb-2 text-xs outline-none placeholder:text-white/30"
+                {...register("description")}
+              />
+            </div>
+            <div className="flex flex-row-reverse gap-2 py-3">
+              <Button variant="primary" disabled={!isValid}>
+                Add task
+              </Button>
+              <Button variant="secondary" onClick={close}>
+                Cancel
+              </Button>
+            </div>
+          </Popover.Panel>
+        </>
+      )}
+    </Popover>
   );
 };
 
