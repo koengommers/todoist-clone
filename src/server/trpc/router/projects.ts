@@ -19,6 +19,9 @@ export const projectsRouter = router({
     .query(async ({ ctx, input }) => {
       const project = await ctx.prisma.project.findUnique({
         where: { id: input.projectId },
+        include: {
+          tasks: true
+        }
       });
 
       if (!project || (project.userId !== ctx.session.user.id)) {
