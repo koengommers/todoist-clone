@@ -37,7 +37,6 @@ const ProjectModal = ({
     },
   });
 
-  // TODO: Mutate server state
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     mutation.mutate(data);
   };
