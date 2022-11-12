@@ -49,8 +49,9 @@ const TaskAdder = ({ context }: { context: TaskContext }) => {
       {({ open, close }) => (
         <>
           {!open && (
-            <Popover.Button className="flex items-center text-red-500">
-              <PlusIcon className="h-6 w-6" /> Add task
+            <Popover.Button className="group flex w-full items-center gap-2 py-3 text-sm text-white/40 hover:text-red-500">
+              <PlusIcon className="h-5 w-5 rounded-full text-red-500 group-hover:bg-red-500 group-hover:text-white" />{" "}
+              Add task
             </Popover.Button>
           )}
           <Popover.Panel
@@ -58,7 +59,7 @@ const TaskAdder = ({ context }: { context: TaskContext }) => {
             focus={true}
             onSubmit={handleSubmit(onSubmit)}
           >
-            <div className="flex flex-col gap-3 rounded-md border border-white/10 p-2 focus-within:border-white/20">
+            <div className="mt-1 flex flex-col gap-3 rounded-md border border-white/10 p-2 focus-within:border-white/20">
               <input
                 placeholder="Task name"
                 className="bg-transparent text-sm outline-none placeholder:text-white/40"

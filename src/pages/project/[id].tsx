@@ -22,7 +22,12 @@ const ProjectPage = ({ projectId }: { projectId: string }) => {
       </Head>
       <h1 className="mb-4 text-2xl font-semibold">{project && project.name}</h1>
       {project.tasks.map((task) => (
-        <div key={task.id}>{task.name}</div>
+        <div
+          className="border-b border-white/10 pt-3 pb-4 text-sm leading-none"
+          key={task.id}
+        >
+          {task.name}
+        </div>
       ))}
       <TaskAdder context={{ projectId: project.id }} />
     </>
